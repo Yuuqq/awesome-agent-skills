@@ -4,24 +4,6 @@ import { useState } from "react";
 import { Copy, Check } from "lucide-react";
 import { useTranslations } from "@/lib/i18n";
 
-const steps = [
-  {
-    step: "01",
-    title: "Find a skill",
-    description: "Browse the Directory above to find an official or community skill that fits your workflow. Each one is a self-contained folder you can read and understand before adding it.",
-  },
-  {
-    step: "02",
-    title: "Add it to your project",
-    description: "Drop the skill folder into `.github/skills/` in your repo. Modern agentic IDEs (Cursor, Claude Code, Windsurf) automatically index this directory on startup.",
-  },
-  {
-    step: "03",
-    title: "It just works",
-    description: "Your agent now knows when and how to run this capability based on semantic context. No manual prompting needed. The skill activates automatically.",
-  },
-];
-
 export default function UsingSkills() {
   const [copied, setCopied] = useState(false);
   const t = useTranslations();

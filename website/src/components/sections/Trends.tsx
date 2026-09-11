@@ -4,6 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { useTranslations } from "@/lib/i18n";
 
+interface TrendData {
+  name: string;
+  description: string;
+  value: number;
+}
+
 export default function Trends() {
   const d3Container = useRef(null);
   const [isDark, setIsDark] = useState(false);
@@ -58,7 +64,7 @@ export default function Trends() {
 
     // Track
     g.selectAll(".track").data(trendData).join("rect")
-      .attr("y", (d: any) => y(d.name)!)
+      .attr("y", (d: TrendData) => y(d.name)!)
       .attr("height", y.bandwidth())
       .attr("fill", trackFill)
       .attr("rx", 4)
@@ -67,26 +73,26 @@ export default function Trends() {
     // Bar
     g.selectAll(".bar").data(trendData).join("rect")
       .attr("class", "bar")
-      .attr("y", (d: any) => y(d.name)!)
+      .attr("y", (d: TrendData) => y(d.name)!)
       .attr("height", y.bandwidth())
       .attr("fill", barFill)
       .attr("rx", 4)
       .attr("width", 0)
       .transition().duration(1000).ease(d3.easeCubicOut)
-      .delay((_: any, i: number) => i * 80)
-      .attr("width", (d: any) => x(d.value));
+      .delay((_: unknown, i: number) => i * 80)
+      .attr("width", (d: TrendData) => x(d.value));
 
     // Labels
     g.selectAll(".label").data(trendData).join("text")
-      .attr("x", (d: any) => x(d.value) + 8)
-      .attr("y", (d: any) => y(d.name)! + y.bandwidth() / 2 + 4)
-      .text((d: any) => `${d.value}%`)
+      .attr("x", (d: TrendData) => x(d.value) + 8)
+      .attr("y", (d: TrendData) => y(d.name)! + y.bandwidth() / 2 + 4)
+      .text((d: TrendData) => `${d.value}%`)
       .attr("fill", labelColor)
       .attr("font-size", "11")
       .attr("font-weight", "600")
       .attr("font-family", "inherit")
       .attr("opacity", 0)
-      .transition().delay((_: any, i: number) => 500 + i * 80)
+      .transition().delay((_: unknown, i: number) => 500 + i * 80)
       .attr("opacity", 1);
   }, [isDark, trendData]);
 

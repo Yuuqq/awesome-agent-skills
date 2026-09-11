@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useTheme } from "next-themes";
 import { Search, Moon, Sun, Globe, Menu, X, PanelLeft, Star, Eye } from "lucide-react";
 import { Github } from "./Icons";
 import { motion, AnimatePresence } from "framer-motion";
@@ -177,7 +176,8 @@ export default function Navbar() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && searchQuery.trim()) {
-                  (window as any).find(searchQuery.trim());
+                  // @ts-expect-error window.find is non-standard but works in most browsers
+                  window.find(searchQuery.trim());
                 }
               }}
               placeholder={t.nav.search}
