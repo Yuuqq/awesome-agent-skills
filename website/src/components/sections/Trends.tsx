@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
 import { useTranslations } from "@/lib/i18n";
 
@@ -10,20 +10,24 @@ interface TrendData {
   value: number;
 }
 
+const CHART_VALUES = [95, 90, 88, 82, 75, 70];
+
 export default function Trends() {
   const d3Container = useRef(null);
   const [isDark, setIsDark] = useState(false);
   const t = useTranslations();
 
-  // Combine i18n text with chart values
-  const trendData = t.trends.items.map((item, i) => {
-    const values = [95, 90, 88, 82, 75, 70]; // Default values for the chart
-    return {
-      name: item.name,
-      description: item.desc,
-      value: values[i] || 50
-    };
-  });
+  // Stable across parent re-renders. `t` is a module constant, so `items`
+  // only changes when the active language changes.
+  const trendData = useMemo<TrendData[]>(
+    () =>
+      t.trends.items.map((item, i) => ({
+        name: item.name,
+        description: item.desc,
+        value: CHART_VALUES[i] ?? 50,
+      })),
+    [t.trends.items],
+  );
 
   // Watch for dark mode changes
   useEffect(() => {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Search, Moon, Sun, Globe, Menu, X, PanelLeft, Star, Eye } from "lucide-react";
+import { Search, Moon, Sun, Globe, Menu, X, PanelLeft, Star } from "lucide-react";
 import { Github } from "./Icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { LANGUAGES, useLanguage, useTranslations } from "@/lib/i18n";
@@ -175,10 +175,12 @@ export default function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && searchQuery.trim()) {
-                  // @ts-expect-error window.find is non-standard but works in most browsers
-                  window.find(searchQuery.trim());
-                }
+                if (e.key !== "Enter" || !searchQuery.trim()) return;
+                const match = filterSearch[0];
+                if (!match) return;
+                document.getElementById(match.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                setSearchQuery("");
+                searchRef.current?.blur();
               }}
               placeholder={t.nav.search}
               className="w-full pl-9 pr-10 py-1.5 text-sm bg-neutral-100/80 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-600 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400"
@@ -201,7 +203,7 @@ export default function Navbar() {
                   </Link>
                 ))}
                 {filterSearch.length === 0 && (
-                  <div className="px-4 py-2 text-xs text-neutral-500 italic">Hit 'Enter' to text-search the page.</div>
+                  <div className="px-4 py-2 text-xs text-neutral-500 italic">No matching sections.</div>
                 )}
               </div>
             )}
